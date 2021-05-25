@@ -30,7 +30,7 @@ function Header() {
                 </div>
                 <div className='relative link flex items-center'>
                     <span className='absolute top-0 right-0 md:right-10 h-4 w-4 bg-yellow-400 text-center text-black font-bold rounded-full'>{items.length}</span>
-                    <ShoppingCartIcon className='h-10'/>
+                    <ShoppingCartIcon onClick={()=>router.push('/checkout')} className='h-10'/>
                     <p className='font-extrabold md:text-sm hidden md:inline ' onClick={()=>router.push('/checkout')} >Basket</p>
                 </div>
             </div>
