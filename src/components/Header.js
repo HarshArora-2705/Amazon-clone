@@ -24,7 +24,7 @@ function Header() {
                     {session? `Hello, ${session.user.name}` :"SignIn"}
                     <p className='font-extrabold md:text-sm'>Account & List</p>
                 </div>
-                <div  className='link'>
+                <div onClick={()=>router.push('/orders')} className='cursor-pointer link'>
                     <p>Returns</p>
                     <p className='font-extrabold md:text-sm'>& Orders</p>
                 </div>

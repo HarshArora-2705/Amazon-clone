@@ -4,7 +4,7 @@ import moment from 'moment';
 import db from '../../firebase'
 import Order from '../components/Order';
 function orders({orders}) {
-    const session =useSession();
+    const [session] =useSession();
     return (
         <div>
             <Header/>
@@ -45,8 +45,7 @@ export async function getServerSideProps(context){
         };
     }
 
-    const stripeOrders= await db
-    .collection('users')
+    const stripeOrders= await db.collection('users')
     .doc(session.user.email)
     .collection('orders')
     .orderBy('timestamp','desc').get();
@@ -64,7 +63,7 @@ export async function getServerSideProps(context){
                 })
             ).data,
         }))
-    )
+    );
 
     return {
         props: {
