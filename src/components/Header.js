@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import {SearchIcon,MenuIcon,ShoppingCartIcon} from '@heroicons/react/outline'
+import {SearchIcon,MenuIcon,ShoppingCartIcon,CloseIcon} from '@heroicons/react/outline'
 import { signIn, signOut, useSession} from 'next-auth/client'
 import {useRouter} from 'next/router'
 import {useSelector} from 'react-redux';
@@ -10,6 +10,7 @@ function Header() {
     const items =useSelector(selectItems);
     return (
         <header>
+            
             <div className='flex items-center bg-amazon_blue p-1 flex-grow py-2'>
                 <div className='mt-2 flex items-center flex-grow sm:flex-grow-0' >
                     <Image onClick={()=>router.push('/')} src="https://links.papareact.com/f90" width={150} height={40} objectFit="contain" className='cursor-pointer'/>
