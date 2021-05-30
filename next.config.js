@@ -5,8 +5,8 @@ module.exports={
   env:{
     stripe_public_key: `${process.env.STRIPE_PUBLIC_KEY}`,
   },
-        future: {
-           webpack5: true,
-        },
+  future: {
+    webpack5: true,
+  },
 
 }
