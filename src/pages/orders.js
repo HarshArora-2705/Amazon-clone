@@ -37,6 +37,8 @@ export default orders
 
 export async function getServerSideProps(context){
     const stripe= require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+    // Get the users logged in credentials...
     const session = await getSession(context);
 
     if (!session){
@@ -45,11 +47,13 @@ export async function getServerSideProps(context){
         };
     }
 
+    // Firebase db
     const stripeOrders= await db.collection('users')
     .doc(session.user.email)
     .collection('orders')
     .orderBy('timestamp','desc').get();
 
+    // Stripe orders
     const orders= await Promise.all(
         stripeOrders.docs.map(async (order)=>({
             id: order.id,

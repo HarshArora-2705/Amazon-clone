@@ -1,80 +1,72 @@
 import Image from "next/image";
 import { useSelector } from "react-redux";
+import Header from "../components/Header"
 import CheckoutProduct from "../components/CheckoutProduct";
-import Header from "../components/Header";
 import { selectItems, selectTotal } from "../slices/basketSlice";
 import Currency from "react-currency-formatter";
 import { useSession } from "next-auth/client";
 import { loadStripe } from "@stripe/stripe-js";
 import axios from "axios";
-
 const stripePromise = loadStripe(process.env.stripe_public_key);
 
-export default function Checkout() {
-  const items = useSelector(selectItems);
-  const total = useSelector(selectTotal);
-  const [session] = useSession();
 
-  async function createCheckoutSession() {
-    const stripe = await stripePromise;
+function Checkout() {
+    const items = useSelector(selectItems);
+    const total = useSelector(selectTotal);
+    const [session] = useSession();
 
-    // call our backend to create a checkout session
-    const checkoutSession = await axios.post("/api/create-checkout-session", {
-      items: items,
-      email: session.user.email,
-    });
+    const createCheckoutSession = async () => {
+      const stripe = await stripePromise;
 
-    //redirect user to stripe checkout
-    const result = await stripe.redirectToCheckout({
-      sessionId: checkoutSession.data.id,
-    });
+      // Call the backend to create a checkout sessions...
+      const checkoutSession = await axios.post('/api/create-checkout-session', {
+        items: items,
+        email: session.user.email
+      });
 
-    if (result.error) alert(result.error.message);
-  }
+      // Redirect user/customer to Stripe Checkout
+      const result = await stripe.redirectToCheckout({
+        sessionId: checkoutSession.data.id,
+      });
 
-  return (
-    <div className="bg-gray-100">
-      <Header />
+      if (result.error) alert(result.error.message);
+    };
 
-      <main className="lg:flex max-w-screen-2xl mx-auto">
-        {/* Left */}
-        <div className="flex-grow m-5 shadow-sm">
-          <Image
-            src="https://links.papareact.com/ikj"
-            width={1020}
-            height={250}
-            objectFit="contain"
-          />
+    return (
+        <div className="bg-gray-100">
+            <Header />
 
-          <div className="flex flex-col p-5 space-y-10 bg-white">
-            <h1 className="text-3xl border-b pb-4">
-              {items.length === 0
-                ? "Your Amazon Basket is empty."
-                : "Shopping Basket"}
-            </h1>
+            <main className="lg:flex max-w-screen-2xl mx-auto">
+                <div className="flex-grow m-5 shadow-sm">
+                    <Image src="https://links.papareact.com/ikj" width={1020} height={250} objectFit="contain" />
 
-            {items.map((item, i) => (
-              <CheckoutProduct
-                key={i}
-                id={item.id}
-                price={item.price}
-                title={item.title}
-                rating={item.rating}
-                description={item.description}
-                category={item.category}
-                image={item.image}
-                hasPrime={item.hasPrime}
-              />
-            ))}
-          </div>
-        </div>
+                    <div className="flex flex-col p-5 space-y-10 bg-white">
+                        <h1 className="text-3xl border-b pb-4">
+                            {items.length === 0 ? 'Your Amazon Basket is empty.' : 'Shopping Basket'}
+                        </h1>
 
-        {/* right */}
-        <div className="flex flex-col bg-white p-10 shadow-md">
-          {items.length > 0 && (
+                            {items.map((item, i) => (
+                                <CheckoutProduct 
+                                key={i}
+                                id={item.id}
+                                price={item.price}
+                                title={item.title}
+                                rating={item.rating}
+                                description={item.description}
+                                category={item.category}
+                                image={item.image}
+                                hasPrime={item.hasPrime}
+                              />
+                            ))}
+                    </div>
+                </div>
+
+                {/* Right */}
+                <div className="flex flex-col bg-white p-10 shadow-md">
+            {items.length > 0 && (
             <>
-              <h2 className="whitespace-normal">
-                Subtotal ({items.length} item\s):{" "}
+              <h2 className="whitespace-nowrap">
+                Subtotal ({items.length} items):{" "}
                 <span className="font-bold">
                   <Currency quantity={total} currency="INR" />
                 </span>
@@ -94,7 +86,9 @@ export default function Checkout() {
             </>
           )}
         </div>
-      </main>
-    </div>
-  );
+            </main>
+        </div>
+    )
 }
+
+export default Checkout

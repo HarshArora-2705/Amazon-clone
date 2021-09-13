@@ -1,7 +1,7 @@
 import { buffer } from "micro";
 import * as admin from "firebase-admin";
 
-//secure a aconn to firebase from the backend
+//secure a connection to firebase from the backend
 const serviceAccount = require("../../../permissions.json");
 const app = !admin.apps.length
   ? admin.initializeApp({
@@ -9,13 +9,13 @@ const app = !admin.apps.length
     })
   : admin.app();
 
-//establish conn to stripePromise
+  //establish conn to stripePromise
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 const endpointSecret = process.env.STRIPE_SIGNING_SECRET;
 
-async function fulfillOrder(session) {
-  console.log("Fulfilling order ", session);
+const fulfillOrder = async (session) => {
+//   console.log("Fulfilling order ", session);
 
   return app
     .firestore()
@@ -57,7 +57,7 @@ export default async (req, res) => {
       //fulfill the order
       return fulfillOrder(session)
         .then(() => res.status(200))
-        .catch((err) => res.status(400).send(`Webhook error : ${err.message}`));
+        .catch((err) => res.status(400).send(`Webhook Error : ${err.message}`));
     }
   }
 };
